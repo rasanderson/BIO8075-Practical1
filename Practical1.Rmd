@@ -1,11 +1,12 @@
 ---
-title: "BIO8070 Meta-analysis and decision support in ecology and conservation"
-subtitle: "Practical 1 Introduction to R and RStudio"
+title: "BIO8075 Meta-analysis and decision support in ecology and conservation"
 author: "Roy Sanderson"
-#date: "October 24, 2017"
+subtitle: Practical 1 Introduction to R and RStudio
 output:
   word_document:
-      reference_docx: template.docx
+    reference_docx: template.docx
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -43,21 +44,20 @@ graphical output.
 ## What is R?
 R is the most widely used statistics package both in academia, and also amongst environmental scientists and ecologists.  One reason for its popularity is that it is both a statistics package and a computer programming environment.  This allows anyone to write an add-on 'package' to provide new functions for R; indeed there are many packages that are now available specifically aimed for use by ecologists.  One disadvantage of R is that compared to 'point-and-click' menu-driven programs (such as Minitab, SPSS or SAS), it has a steep initial learning curve.  However, once you have learnt the basics, the structure of many analyses are relatively simple, and it is also much easier to document analyses using "R Scripts" compared to menu-driven software, and reproduce analyses consistently.
 
+## Interactive website
+I have created an interactive website to help people use RStudio for the first time, which you might find useful to read before attempting this practical. You can access via Canvas or [through this link](https://naturalandenvironmentalscience.shinyapps.io/RstudioInstall/#section-navigating-r-studio)
+
 ## Getting Started with R and RStudio
-R is open source software, freely available to download from the main website if you wish to install it on your own PC (it runs on Windows, Macs and Linux):
+R is open source software, freely available to download from the main website so you can install it on your own PC (it runs on Windows, Macs and Linux):
 
 https://www.r-project.org/
 
-RStudio is an integrated development environment (IDE) that makes it easier to manage your data analyses.  It comes in several versions, and RStudio Desktop it is also freely available for personal use:
+It can also be accessed via the Newcastle University [Windows Virtual Desktop service](https://services.ncl.ac.uk/itservice/core-services/software/wvd/#accesswvd). RStudio is an integrated development environment (IDE) that makes it easier to manage your data analyses.  It comes in several versions, and RStudio Desktop it is also freely available for personal use:
 
 https://www.rstudio.com/products/rstudio/download/
 
 ## Starting RStudio
-Login to the PC as usual, and select R, click on the Start button then go to the option:
-
-**Start -> All Programs -> Statistical Software -> R -> RStudio**
-
-This will start up the RStudio program.  If you get a pop-up box asking you whether to start the 64-bit or 32-bit version, use the 32-bit version.  You should see the following screen:
+After you start R you should see the following screen:
 
 ![RStudio screen](RStudio_screen.jpg)
 
@@ -79,11 +79,11 @@ The most important area, and the one you will use primarily in this first practi
 
 
 ## Working Directory or Folder
-RStudio needs to know where to look to find data, or where to export data.  It is best to create a folder for any particular analysis, and store R-scripts, data-files, results etc in that folder.  So before you begin your analyses, create a folder BIO8052 in your Documents Filespace and within that folder create a subfolder called Practical 1 
+RStudio needs to know where to look to find data, or where to export data.  It is best to create a folder for any particular analysis, and store R-scripts, data-files, results etc in that folder.  So before you begin your analyses, create a folder BIO8075 in your Documents Filespace and within that folder create a subfolder called Practical 1 
 
 **Session -> Set Working Directory -> Choose Directory...**
 
-Navigate to the Practical 1 folder you have just created, and click on the **"Select folder"** button.
+Navigate to the Practical 1 folder you have just created, and click on the **"Select folder"** button. **Note** RStudio also allows you to create "projects" which are special files that when opened automatically tell R what is the working folder. Ask if you want to know more about this feature, or look at [this section of the interactive website](https://naturalandenvironmentalscience.shinyapps.io/RstudioInstall/#section-projects)
 
 
 ## The Basics
@@ -177,14 +177,33 @@ The current name of the R Script at the top is 'untitled1' and it is in red to s
 give it a sensible name (without spaces), and save it in your Practical 1 folder.  To run the script (i.e. send its contents to the Console), click on a line in the script and press CTRL-Return keys simulatenously.
 
 ## R packages
-R has many 'add-on' packages that greatly extend its capabilities.  In this module we are going to make use of the 'tidyverse' package, which is a group of packages (or meta-package) providing facilities for advanced plotting of data (ggplot), data manipulation (tidyr) etc.  To install the package type:
+R has many 'add-on' packages that greatly extend its capabilities.  In this module and in NES8010 we are going to make use of the 'tidyverse' package, which is a group of packages (or meta-package) providing facilities for advanced plotting of data (`ggplot2`), data manipulation (`tidyr`) etc.
+
+### "Goal oriented" approaches
+I also like the `mosaic` package which makes it easier to plot basic graphs using `ggplot2` as it has a consistent "goal-oriented" focus to both analyses and display of data. By a "goal-oriented" approach I mean:
+
+$$\textit{goal}(\textit{response ~ explanatory, data = dataset_name, ...})$$
+
+where:
+
+* $goal$ could be a scatterplot, boxplot, simple statistic like a mean or standard deviation, or a linear model for a regression or analysis of variance
+* $response$ this is what is conventionally is plotted on the vertical y-axis of a graph. It is what you expect to change as a result of some intervention. e.g. are the numbers of species of insects greater on organic vs conventional farms? Your response is the number of species of insects
+* $explanatory$ This is your intervention. This might be an experimental "treatment" but in biodiversity and conservation studies you might be comparing sites with different management regimes for example. Your explanatory might be categorical (like farm management) or continuous (e.g. elevation)
+* $\textit{dataset_name}$ This is the name of the table of data that contains your response and explanatory variables
+* $...$ You may want to include additional options, e.g. to control colours on a graph
+
+
+### Installing packages
+To install the package type:
 
 `install.packages("tidyverse")`
+`install.packages("mosaic")`
 
 as it is a big collection of packages it may take a while to install.  Once installed you can activate it with the library function (don't worry about warning messages):
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
+library(mosaic)
 ```
 
 ## Data import from Excel
@@ -240,9 +259,9 @@ which will display the second column of data.  To display rows 5 to 10, use the 
 slice(orgmatt.dat, 5:10)
 ```
 
-Suppose you want to calculate the average organic matter, and standard deviation, for each site.  This is easy to do using the summarise and group_by functions, and also a "pipe" symbol %>% which sends data or the output of one function into another function:
+Suppose you want to calculate the average organic matter, and standard deviation, for each site.  This is easy to do using the summarise and group_by functions, and also a "pipe" symbol %>% which means "THEN" send data or the output of one function into another function:
 
-```{r group_by and summarise example}
+```{r group_by and summarise example, warning=FALSE, message=FALSE}
 orgmatt.dat %>%
    group_by(site) %>%
       summarise(mean_orgmatt = mean(orgmatt))
@@ -250,9 +269,17 @@ orgmatt.dat %>%
 
 The above few lines may look a little challenging at first, but simply say "take the orgmatt.dat data, group it according to site code, calculate the average for each site".  __Question:__ Modify the above code so that it calculates a mean, sd and maximum value in one output. ( __Hint:__ use the up-arrow to save you having to re-type the whole command, or enter it into your R Script window).
 
-Should you wish to store the results of a group_by and summarise command for later use, simply assign the output to a new R object:
+ You can do the equivalent using the "goal-oriented" approach of `mosaic` using:
 
-```{r group_by and summarise saving results}
+```{r means_by_mosaic}
+mean(orgmatt ~ site, data=orgmatt.dat)
+```
+
+Personally I think this is easier, as it only needs one line of code, and sticks to a "response ~ explanatory" format quite clearly.
+
+Should you wish to store the results of a `group_by` and `summarise` command for later use, simply assign the output to a new R object:
+
+```{r group_by and summarise saving results, message=FALSE}
 org_means <- orgmatt.dat %>%
    group_by(site) %>%
       summarise(mean_orgmatt = mean(orgmatt))
@@ -260,11 +287,11 @@ org_means <- orgmatt.dat %>%
 The above lines do not display anything, but simply store the results in `org_means`.
 To display the contents of `org_means` simply type its name in the Console window.
 Finally, can you modify the above three lines to create a tibble or data.frame that
-contains _both_ the mean and standard deviations of the data?
+contains _both_ the mean and standard deviations of the data? **Hint**: you need to call both the `mean` and `sd` functions within the `summarise` function
 
 
 ## Plotting your data
-In this module we are mainly going to use one of the 'tidyverse' packages, ggplot2, to undertake plotting.  Although it is harder to learn than standard base plots, it gives you much more control over appearance, layout etc.  Again, it is usually best to store the code for your plots in your R Script file; that means you can regenerate them exactly whenever you need, even if your original data change.
+In this NES8010 you are mainly going to use one of the 'tidyverse' packages, `ggplot2`, to undertake plotting.  Although it is harder to learn than standard base plots, it gives you much more control over appearance, layout etc. I'll also show you how to use `mosaic` which gives access to `ggformula`. This gives a more accessible interface to `ggplot2` which is challenging to learn initially. You can read more about `ggformula` [at this website](https://cran.r-project.org/web/packages/ggformula/vignettes/ggformula-blog.html). Again, it is usually best to store the code for your plots in your R Script file; that means you can regenerate them exactly whenever you need, even if your original data change.
 
 ### Boxplots
 You may be familiar with bar-charts, but many scientists argue these hide too much information.  A common alternative are boxplots.  We build a plot in several steps, layer-by-layer, adding new layers with a plus `+` symbol.  We begin with a call to the `ggplot` function, the name of the table of data, and the "aesthetics", i.e. what will be on the x and y-axes.  Enter the following into your R script, and run it in the usual way with CTRL-Return:
@@ -299,9 +326,28 @@ ggplot(orgmatt.dat, aes(x = site, y = orgmatt) ) +
    theme_bw()
 ```
 
-There are several different themes (some used by UK national newspapers or scientific journals) available in ggplot.  I often use `theme_bw()` and `theme_classic()`
+There are several different themes (some used by UK national newspapers or scientific journals) available in ggplot.  I often use `theme_bw()` and especially `theme_classic()`
    
 Useful tip: click on the "Export" button on a graph and you can copy it to your clipboard, save as a pdf file etc. to insert into Word reports or Powerpoint presentations.
+
+### The same boxplot with `ggformula` approach
+If, like me, you sometimes find `ggplot2` a challenge, you can alternatively use the `mosaic`/`ggformula` approach. This also allows you to link graphics functions together, but uses the "pipe" or THEN `%>%` symbol.
+
+First, the basic boxplot. Note how we use a "goal-oriented" approach, so here your "goal" is to produce a boxplot, the "response" vertical axis is `orgmatt` and the explanatory is `site`:
+
+```{r}
+gf_boxplot(orgmatt ~ site, data=orgmatt.dat)
+```
+
+Just as before, you can now tweak your code to create the identical graph:
+
+```{r complete_boxplot_with_ggformula}
+gf_boxplot(orgmatt ~ site, data=orgmatt.dat) %>% 
+   gf_labs(x="Study area", y="Organic matter content") %>% 
+   gf_refine(theme_bw())
+```
+
+You can see that the `gf_` ("graphics formula") approach is slightly shorter, with only 3 compared to 5 lines of code, and to my mind is slightly easier to learn. However, it is entirely optional which method you use to plot graphs.
 
 ## Reshaping data
 Sometimes you will be sent data that are not in the best format to analyse using R and you will need to restructure the data.  The following data are from an experiment to determine the impacts of different cutting regimes (Low, Medium or High) on insect diversity.  The data show the diversity of insects caught in each of the five plots per treatment:
@@ -324,10 +370,10 @@ insect.dat
 Most univariate analyses in R (and many other statistical packages) expect the **response** and **explanatory** variables to be in different columns; here we need two columns, one to contain the response (insect diversity), and a second to contain the explanatory (cutting regime).  Your `insect.dat` data are in 'wide format' and we need to convert it into a 'tidy' or 'long' format. The `gather` command can be used, but this is now being replaced with the newer `pivot_longer` which is slightly easier to understand:
 
 ```{r gather insect data}
-# Older version in most books
+# Conventional method in most books
 insect.tidy <- gather(insect.dat, key="treatment",    
                       value = "diversity")
-# Newer version from 2019
+# Newer method
 insect.tidy <- pivot_longer(insect.dat, cols = c("cuttingL", "cuttingM", "cuttingH"), 
                             names_to = "treatment",
                             values_to = "diversity")
@@ -339,7 +385,7 @@ Your response and explanatory data are now in two columns, and this type of data
 __On your own:__
 
 * Produce summary statistics (mean, sd) for your insect.tidy data (Hint: use the `group_by`, `summarise` and `%>%` functions.)
-* Produce a boxplot of your insect diversity data (Hint: build up your boxplot in ggplot layer-by-layer in your R Script as you did earlier).
+* Produce a boxplot of your insect diversity data (Hint: build up your boxplot in `ggplot` or `gg_formula` layer-by-layer in your R Script as you did earlier).
 
 ## Factors
 Notice that the diversity seems to be higher where the cutting is higher, but there are outliers in the data.  Unfortunately your boxplot does not have the three treatments in a logical order; it has put the High cut first, the Low second, and the Medium third.  This is because by default it takes them in alphabetical order.  To correct this, we need to change the character into a factor, and reset the order using the `factor()` function, and also ensure that the `levels` are plotted Low, Medium and High in your boxplot.  Issue the following commands:
@@ -360,7 +406,7 @@ __Note__
 2.	the `$` operator is used to run commands on just a single column, here treatment
 3.	the levels option allows you to specify the order of your levels.  The small `c` is to indicate that there are multiple items of text to follow in the brackets.
 
-Re-run the ggplot code to produce your boxplot; you will now see that the order of the three treatments is more logical.  In general, after reading your data into R using read_csv you may want to convert character variables to factors if they represent experimental treatments (leave them as characters otherwise).
+Re-run `ggplot` or `ggformula` code to produce your boxplot; you will now see that the order of the three treatments is more logical.  In general, after reading your data into R using `read_csv` you may want to convert character variables to factors if they represent experimental treatments (leave them as characters otherwise).
 
 
 ## Continuous data
@@ -372,7 +418,8 @@ summary(bluetit.dat)
 ```
 Notice how R displays min, mean, max values etc. for your explanatory variable (gardenfood) as this is a __continuous__ explanatory variable, unlike your organic matter and insect diversity studies which had __categorical__ explanatory variables. 
 
-You now want a scatter-plot to display the data:
+You now want a scatter-plot to display the data
+### Scatterplot of bluetit data with `ggplot2`
 
 ```{r ggplot bluetit scatter}
 ggplot(bluetit.dat, aes(x=gardenfood, y=condition)) +
@@ -382,10 +429,10 @@ ggplot(bluetit.dat, aes(x=gardenfood, y=condition)) +
 
 You can see that there is a general trend of increased bird condition with the provision of garden food, although the data are noiser at the upper end of the scale.  We can overlay the line of best fit from a linear model (lm) with ggplot:
 
-```{r ggplot bluetit scatter plus lm}
+```{r ggplot bluetit scatter plus lm, message=FALSE}
 ggplot(bluetit.dat, aes(x=gardenfood, y=condition)) +
     geom_point() +
-    geom_smooth(method = 'lm') +
+    geom_smooth(method = 'lm', se=TRUE) +
     theme_bw()
 ```
 
@@ -393,8 +440,18 @@ This graph shows a fitted straight line regression (fitted by a 'linear model' o
 
 __Warning:__ This is very nice as a short-cut to visualise your data with a simple straight line, but it does not provide you with model statistics, nor work for complex models.  These have to be fitted manually.
 
- 
-You can improve your plot using xlab, ylab as earlier.
+You can improve your plot using `xlab`, `ylab` as earlier.
+
+### Scatterplot of bluetit data using `ggformula`
+Here is the identical plot with the `ggformula` approach if you prefer it, using the `gf_point()` function:
+
+```{r bluetit_ggformula}
+gf_point(condition ~ gardenfood, data=bluetit.dat) %>% 
+   gf_smooth(method="lm", se=TRUE) %>% 
+   gf_refine(theme_bw())
+```
+
+Use `gf_labs()` if you want to change the x and y axis labels.
 
 
 ## Simple summary statistics
@@ -419,9 +476,7 @@ insect.tidy %>%
 ```
 
 ### Function for 95% confidence intervals
-These are not automatically calculated by R, but I have added a simple script `ci95.R` onto the Blackboard website.  Download and save this script in your Practical 1 folder.  The script creates a function, `ci95` that you can use to display Confidence Intervals.  It is a little more complicated than the one you have just created for standard errors, so ask if you do not understand any of it.  Open the script in RStudio by clicking on __File -> Open File__ from its main menu.  Next, push the commands into R by clicking on the __Source__ button at the top right of the R Script window.
-
-This then creates an `ci95` function to calculate 95% CI which you can use in the usual way to find the relevant values for the three cutting regimes.
+These are not automatically calculated by R, but the mosaic package contains a `confint()` function which will do the trick. It automatically calculates both the lower and upper confidence intervals (95%) although you can use the `level` option to change the confidence level..
 
 __Question:__ Look at your 95% confidence intervals.  Which of these two statements is correct?
 1.	If we repeat the experiment, we can be 95% certain that the mean insect diversity under the High cutting regime would be between 72.88 and 91.12.
@@ -459,7 +514,12 @@ To obtain help for a command, preface the command with a ? e.g.
 
 `?mean`
 
-The help will open in a window at the bottom-right of RStudio.
+The help will open in a window at the bottom-right of RStudio. You will actually be offered two choices:
+
+* Aggregating function (in package `mosaic`)
+* Arithmetic Mean (in package `base`)
+
+This is because the `mosaic` package adds some goodies to the basic function, and allows you to group your means by one or more categorical explanatory variables. Select the `mosaic` version of mean.
 
 The help can be difficult to understand initially, but the help format is similar for all commands:
 
@@ -468,15 +528,10 @@ The help can be difficult to understand initially, but the help format is simila
 * Arguments - a more detailed description of the arguments that can be used.
 * Details - a more detailed description of the function
 * Return - describes the output of the function.  For mean it is simply a number; other functions return tables, columns of numbers, statistical analyses etc..
-* Example - shows how the function can be used, often with the aid of a built-in dataset.  The example section can be particularly useful to help understand functions.  You can even run an example:
+* Example - shows how the function can be used, often with the aid of a built-in dataset.  The example section can be particularly useful to help understand functions.  Sometimes you can learn more about code by running example code yourself.
 
- .
 
-```{r example of help}
-example(mean, local=TRUE)
-```
-
-In the above output, the commands listed in the example at the end of the manual page for the mean function are run.  Note that I added the option `local=TRUE` to ensure that none of the variables created in the example interfered with your own workspace.  If you run the example without this option (the default) you will notice that the example datasets x and xm will appear in your workspace.  There are also a lot of excellent tutorials and introductory videos on R usage on the internet which are worth exploring.
+There are also a lot of excellent tutorials and introductory videos on R usage on the internet which are worth exploring.
 
 
 When I work with RStudio, I typically write commands interactively into the Console, and regularly copy them from the History or Console window into an R Script, with comments to remind me of why I did various analyses.  You can copy and paste manually from the Console, or alternatively click on the "To Source" button in the History window: 
@@ -498,3 +553,6 @@ Beckerman, A.P. et al. (2017) Getting started with R: an introduction for biolog
 An excellent website for hints on tweaking ggplot2 graphs is:
 
 <http://www.cookbook-r.com/Graphs/>
+
+Excellent guidance on the `mosaic` and `ggformula` packages is at:
+[mosaic](https://projectmosaic.github.io/mosaic/articles/mosaic-resources.html)
