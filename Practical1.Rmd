@@ -1,12 +1,12 @@
 ---
-title: "BIO8075 Meta-analysis and decision support in ecology and conservation"
+title: "BIO8075 Critical thinking and Analysis for Evidence-based Environmental Science"
 author: "Roy Sanderson"
 subtitle: Practical 1 Introduction to R and RStudio
 output:
-  word_document:
-    reference_docx: template.docx
   html_document:
     df_print: paged
+  word_document:
+    reference_docx: template.docx
 ---
 
 ```{r setup, include=FALSE}
@@ -45,21 +45,23 @@ graphical output.
 R is the most widely used statistics package both in academia, and also amongst environmental scientists and ecologists.  One reason for its popularity is that it is both a statistics package and a computer programming environment.  This allows anyone to write an add-on 'package' to provide new functions for R; indeed there are many packages that are now available specifically aimed for use by ecologists.  One disadvantage of R is that compared to 'point-and-click' menu-driven programs (such as Minitab, SPSS or SAS), it has a steep initial learning curve.  However, once you have learnt the basics, the structure of many analyses are relatively simple, and it is also much easier to document analyses using "R Scripts" compared to menu-driven software, and reproduce analyses consistently.
 
 ## Interactive website
-I have created an interactive website to help people use RStudio for the first time, which you might find useful to read before attempting this practical. You can access via Canvas or [through this link](https://naturalandenvironmentalscience.shinyapps.io/RstudioInstall/#section-navigating-r-studio)
+I have created an interactive website to help people use RStudio for the first time, which you might find useful to read before attempting this practical. You can access via Canvas or [through this link](https://naturalandenvironmentalscience.shinyapps.io/RstudioInstall/#section-navigating-r-studio). Note: some of the material on the website refers to another module, BIO2020, but most is relevant to BIO8075 and is relevant.
 
 ## Getting Started with R and RStudio
 R is open source software, freely available to download from the main website so you can install it on your own PC (it runs on Windows, Macs and Linux):
 
 https://www.r-project.org/
 
-It can also be accessed via the Newcastle University [Windows Virtual Desktop service](https://services.ncl.ac.uk/itservice/core-services/software/wvd/#accesswvd). RStudio is an integrated development environment (IDE) that makes it easier to manage your data analyses.  It comes in several versions, and RStudio Desktop it is also freely available for personal use:
+RStudio is an integrated development environment (IDE) that makes it easier to manage your data analyses.  It comes in several versions, and RStudio Desktop it is also freely available for personal use:
 
 https://www.rstudio.com/products/rstudio/download/
+
+Until you are experienced in using R/RStudio you are strongly recommended to use the version of R installed on the NUIT cluster-room PCs.
 
 ## Starting RStudio
 After you start R you should see the following screen:
 
-![RStudio screen](RStudio_screen.jpg)
+![RStudio screen](RStudio_screen.JPG)
 
 There are 3 parts to the screen:
 
@@ -187,19 +189,18 @@ $$\textit{goal}(\textit{response ~ explanatory, data = dataset_name, ...})$$
 where:
 
 * $goal$ could be a scatterplot, boxplot, simple statistic like a mean or standard deviation, or a linear model for a regression or analysis of variance
-* $response$ this is what is conventionally is plotted on the vertical y-axis of a graph. It is what you expect to change as a result of some intervention. e.g. are the numbers of species of insects greater on organic vs conventional farms? Your response is the number of species of insects
-* $explanatory$ This is your intervention. This might be an experimental "treatment" but in biodiversity and conservation studies you might be comparing sites with different management regimes for example. Your explanatory might be categorical (like farm management) or continuous (e.g. elevation)
+* $response$ this is what is conventionally is plotted on the vertical y-axis of a graph. It is the **outcome** you expect to change as a result of some **intervention** (think back to PICO). e.g. are the numbers of species of insects greater on organic vs conventional farms? Your response is the number of species of insects
+* $explanatory$ This is your intervention. This might be an experimental "treatment" but in biodiversity,  conservation or agricultural studies you might be comparing sites with different management regimes for example. Your explanatory might be categorical (like farm management) or continuous (e.g. elevation)
 * $\textit{dataset_name}$ This is the name of the table of data that contains your response and explanatory variables
 * $...$ You may want to include additional options, e.g. to control colours on a graph
 
 
 ### Installing packages
-To install the package type:
+To install the `tidyverse` package type:
 
 `install.packages("tidyverse")`
-`install.packages("mosaic")`
 
-as it is a big collection of packages it may take a while to install.  Once installed you can activate it with the library function (don't worry about warning messages):
+as it is a big collection of packages it may take a while to install.  Once installed you can activate it with the library function (don't worry about warning messages). The `mosaic` package should already be available on the NUIT cluster PCs, but if not, you will also need to install it. Activate both packages with the `library` function - when you activate a package you make its additional functionality and features available for you to use:
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
@@ -236,7 +237,7 @@ If you double-click on the name you will see the data displayed in a spreadsheet
 orgmatt.dat
 ```
 
-__Note:__ you may notice many books about R using the `read.csv` command rather than `read_csv` function.  The latter is more advanced, and recommended for this module.
+__Note:__ you may notice many books about R using the `read.csv` (base R) command rather than `read_csv` (from `tidyverse` package).  The latter is more advanced, and recommended for this module, but you can use either.
 
 ## Summary statistics about your data
 Use the `summary` command to find mean (average), median, min, max etc. of your data:
@@ -479,6 +480,7 @@ insect.tidy %>%
 These are not automatically calculated by R, but the mosaic package contains a `confint()` function which will do the trick. It automatically calculates both the lower and upper confidence intervals (95%) although you can use the `level` option to change the confidence level..
 
 __Question:__ Look at your 95% confidence intervals.  Which of these two statements is correct?
+
 1.	If we repeat the experiment, we can be 95% certain that the mean insect diversity under the High cutting regime would be between 72.88 and 91.12.
 2.	We are 95% certain that the mean insect diversity under the High cutting regime is between 72.88 and 91.12
 
